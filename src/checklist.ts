@@ -18,7 +18,7 @@ export class Checklist {
   private readonly rail = h('nav', { class: 'rail', 'aria-label': 'Jump to letter', 'data-anchor': 'rail' })
   private readonly bubble = h('div', { class: 'bubble', 'aria-hidden': 'true' })
 
-  constructor(private readonly root: HTMLElement) {
+  constructor(private readonly root: HTMLElement, private readonly onRender: () => void = () => {}) {
     root.append(this.bar(), this.ctl, this.rail, this.panel, this.dock(), this.bubble)
     this.buildRail()
     this.render()
@@ -30,12 +30,30 @@ export class Checklist {
     this.root.style.setProperty('--cols', String(this.cols))
     const shown = this.shownSessions()
     const head = h('div', { class: 'head', 'data-anchor': 'head' },
+      h('div', { class: 'head__bg', 'aria-hidden': 'true' }),
       h('div', { class: 'head__name' }, h('span', { class: 'roll' }, '#'), h('span', { class: 'name' }, 'Name')),
+      h('span', { class: 'head__count', 'aria-hidden': 'true' }, this.countLabel(this.sel)),
       ...shown.map((s, i) => this.tab(s, i)))
     const pupils = this.pending ? PUPILS.filter((p) => !this.ticks.has(tickId(this.sel, p.roll))) : PUPILS
     const rows = h('div', { class: 'rows' }, ...pupils.map((p) => this.row(p, shown)))
     if (!pupils.length) rows.append(h('p', { class: 'empty' }, 'All done for this date'))
     this.panel.replaceChildren(head, rows)
+    this.onRender()
+  }
+
+  /** The scroll container, for the collapsing header. */
+  get scroller(): HTMLElement {
+    return this.panel
+  }
+
+  private countDone(session: string): number {
+    return PUPILS.filter((p) => this.ticks.has(tickId(session, p.roll))).length
+  }
+
+  /** Collapsed header: the selected date's count as one pill on the left. */
+  private countLabel(session: string): string {
+    const s = SESSIONS.find((x) => x.id === session)!
+    return `${s.day} ${s.date} · ${this.countDone(session)}/${PUPILS.length}`
   }
 
   private shownSessions(): readonly Session[] {
@@ -69,7 +87,7 @@ export class Checklist {
   }
 
   private tab(s: Session, i: number): HTMLElement {
-    const done = PUPILS.filter((p) => this.ticks.has(tickId(s.id, p.roll))).length
+    const done = this.countDone(s.id)
     const tab = h('div', { class: `tab${s.id === this.sel ? ' sel' : ''}${s.old ? ' old' : ''}`, 'data-session': s.id, 'data-anchor': i === 0 ? 'pitch' : undefined },
       h('button', { class: 'tab__n', type: 'button', 'aria-label': `${done} of ${PUPILS.length} done` }, String(done), h('small', {}, `/${PUPILS.length}`)),
       h('button', { class: 'tab__d', type: 'button' }, `${s.day} ${s.date}`))
@@ -116,9 +134,9 @@ export class Checklist {
     box?.classList.toggle('on', op.on)
     box?.setAttribute('aria-pressed', String(op.on))
     for (const tab of this.panel.querySelectorAll<HTMLElement>('.tab')) {
-      const done = PUPILS.filter((p) => this.ticks.has(tickId(tab.dataset.session!, p.roll))).length
-      tab.querySelector('.tab__n')!.firstChild!.textContent = String(done)
+      tab.querySelector('.tab__n')!.firstChild!.textContent = String(this.countDone(tab.dataset.session!))
     }
+    this.panel.querySelector('.head__count')!.textContent = this.countLabel(this.sel)
   }
 
   private buildRail(): void {

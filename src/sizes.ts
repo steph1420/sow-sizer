@@ -1,4 +1,4 @@
-// Every adjustable size on the Checklist, in CSS px. Defaults = C1 plan + roll column + 48 px rows.
+// Every adjustable size on the Checklist, in CSS px. Defaults = Steve's saved values ("Mine", t93u).
 export type Group = 'Layout' | 'Rows' | 'Columns' | 'Header' | 'Chrome'
 
 /** text: warn under 13 px. tap: warn when the tap it produces is under 44 px. */
@@ -20,28 +20,33 @@ export const MIN_TEXT = 13
 export const MIN_TAP = 44
 
 export const SPECS = [
-  { key: 'rail', label: 'Rail width', group: 'Layout', def: 32, min: 16, max: 56, kind: 'len' },
-  { key: 'railGap', label: 'Rail → panel gap', group: 'Layout', def: 4, min: 0, max: 24, kind: 'len' },
-  { key: 'edge', label: 'Panel side margin', group: 'Layout', def: 8, min: 0, max: 24, kind: 'len' },
-  { key: 'panelR', label: 'Panel corner radius', group: 'Layout', def: 20, min: 0, max: 32, kind: 'len' },
-  { key: 'railText', label: 'Rail letter size', group: 'Layout', def: 13, min: 10, max: 18, kind: 'text' },
-  { key: 'rowH', label: 'Row height', group: 'Rows', def: 48, min: 32, max: 72, kind: 'tap' },
+  { key: 'rail', label: 'Rail width', group: 'Layout', def: 30, min: 16, max: 56, kind: 'len' },
+  { key: 'railGap', label: 'Rail → panel gap', group: 'Layout', def: 0, min: 0, max: 24, kind: 'len' },
+  { key: 'edge', label: 'Panel side margin', group: 'Layout', def: 6, min: 0, max: 24, kind: 'len' },
+  { key: 'panelR', label: 'Panel corner radius', group: 'Layout', def: 11, min: 0, max: 32, kind: 'len' },
+  { key: 'railText', label: 'Rail letter size', group: 'Layout', def: 17, min: 10, max: 18, kind: 'text' },
+  { key: 'rowH', label: 'Row height', group: 'Rows', def: 44, min: 32, max: 72, kind: 'tap' },
   { key: 'rowGap', label: 'Row gap (0 = lines, >0 = cards)', group: 'Rows', def: 0, min: 0, max: 12, kind: 'len' },
-  { key: 'inset', label: 'Inset before roll #', group: 'Rows', def: 8, min: 0, max: 32, kind: 'len' },
-  { key: 'rollW', label: 'Roll # column width', group: 'Rows', def: 28, min: 16, max: 56, kind: 'len' },
+  { key: 'inset', label: 'Inset before roll #', group: 'Rows', def: 1, min: 0, max: 32, kind: 'len' },
+  { key: 'rollW', label: 'Roll # column width', group: 'Rows', def: 22, min: 16, max: 56, kind: 'len' },
   { key: 'rollText', label: 'Roll # text size', group: 'Rows', def: 13, min: 10, max: 20, kind: 'text' },
   { key: 'nameGap', label: 'Roll # → name gap', group: 'Rows', def: 6, min: 0, max: 24, kind: 'len' },
-  { key: 'nameText', label: 'Name text size', group: 'Rows', def: 15, min: 11, max: 22, kind: 'text' },
-  { key: 'box', label: 'Tick box size', group: 'Columns', def: 32, min: 20, max: 48, kind: 'len' },
-  { key: 'pitch', label: 'Column pitch', group: 'Columns', def: 56, min: 36, max: 80, kind: 'tap' },
-  { key: 'endGap', label: 'Gap after last column', group: 'Columns', def: 4, min: 0, max: 24, kind: 'len' },
-  { key: 'head', label: 'Header height', group: 'Header', def: 92, min: 56, max: 140, kind: 'len' },
-  { key: 'countText', label: 'Count text size', group: 'Header', def: 17, min: 12, max: 28, kind: 'text' },
-  { key: 'chipH', label: 'Date chip height', group: 'Header', def: 28, min: 20, max: 44, kind: 'len' },
-  { key: 'chipW', label: 'Date chip width (max)', group: 'Header', def: 52, min: 36, max: 80, kind: 'len' },
-  { key: 'chipText', label: 'Date chip text size', group: 'Header', def: 13, min: 10, max: 18, kind: 'text' },
-  { key: 'tabR', label: 'Tab corner radius', group: 'Header', def: 16, min: 0, max: 32, kind: 'len' },
-  { key: 'bar', label: 'Class bar height', group: 'Chrome', def: 44, min: 36, max: 64, kind: 'tap' },
+  { key: 'nameText', label: 'Name text size', group: 'Rows', def: 16, min: 11, max: 22, kind: 'text' },
+  { key: 'box', label: 'Tick box size', group: 'Columns', def: 33, min: 20, max: 48, kind: 'len' },
+  { key: 'pitch', label: 'Column pitch', group: 'Columns', def: 55, min: 36, max: 80, kind: 'tap' },
+  { key: 'endGap', label: 'Gap after last column', group: 'Columns', def: 0, min: 0, max: 24, kind: 'len' },
+  { key: 'head', label: 'Header height', group: 'Header', def: 84, min: 56, max: 140, kind: 'len' },
+  { key: 'headMin', label: 'Collapsed header height', group: 'Header', def: 32, min: 24, max: 56, kind: 'len' },
+  { key: 'collapseDist', label: 'Collapse distance (scroll px)', group: 'Header', def: 52, min: 16, max: 160, kind: 'len' },
+  { key: 'countText', label: 'Count text size', group: 'Header', def: 13, min: 12, max: 28, kind: 'text' },
+  { key: 'countGap', label: 'Count → date chip gap', group: 'Header', def: 4, min: 0, max: 20, kind: 'len' },
+  { key: 'chipH', label: 'Date chip height', group: 'Header', def: 24, min: 20, max: 44, kind: 'len' },
+  { key: 'chipW', label: 'Date chip width (max)', group: 'Header', def: 49, min: 36, max: 80, kind: 'len' },
+  { key: 'chipText', label: 'Date chip text size', group: 'Header', def: 11, min: 10, max: 18, kind: 'text' },
+  { key: 'tabR', label: 'Tab corner radius', group: 'Header', def: 12, min: 0, max: 32, kind: 'len' },
+  { key: 'bar', label: 'Class bar height', group: 'Chrome', def: 46, min: 36, max: 64, kind: 'tap' },
+  { key: 'classW', label: 'Class chip width', group: 'Chrome', def: 254, min: 140, max: 320, kind: 'len' },
+  { key: 'classH', label: 'Class chip height', group: 'Chrome', def: 42, min: 32, max: 60, kind: 'tap' },
   { key: 'ctl', label: 'Controls row height', group: 'Chrome', def: 44, min: 36, max: 64, kind: 'tap' },
   { key: 'dock', label: 'Dock height', group: 'Chrome', def: 52, min: 40, max: 72, kind: 'tap', tapOf: (v) => v - 8 },
 ] as const satisfies readonly SizeSpec[]

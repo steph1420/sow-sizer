@@ -6,7 +6,10 @@ Live: https://steph1420.github.io/sow-sizer/ — no app data, no sheet, no token
 - **View mode**: tick/untick, undo/redo, Pending filter, 1|2 date columns, tap a date tab to select it, A–Z rail jumps.
 - **Edit mode** (✎ Edit sizes): every size as a slider with −/+, in CSS px; drag handles on the rail edge, first row,
   column boundary and header. Values under 13 px text / 44 px taps show a ⚠ warning but are allowed.
-  Reset returns to the defaults (C1 + roll # column + 48 px rows). Save as A / B and Load A / B to compare.
+  Reset returns to the defaults: Steve's saved values ("Mine", phone 360x652 @3). One-tap built-ins:
+  **Mine**, **Suggested** (design fixes, `src/presets.ts`) and **C1** (the first mock). Save as A / B and Load A / B too.
+- **Collapsing header**: scrubbed 1:1 with scroll over *Collapse distance*, down to *Collapsed header height*
+  (date pills + one count pill). Compositor-driven CSS scroll timeline where supported, rAF fallback (`src/collapse.ts`).
 
 ## Save and pulling the values
 **Save** stores the values on the phone (localStorage), writes them into the URL hash, and copies a 3-line export:

@@ -1,9 +1,14 @@
 /* Edit mode: bottom sheet (about 42% of the screen, collapsible), drag handles, FAB for View mode. */
 #app[data-mode="edit"] { --sheet-reserve: 42dvh; }
 #app[data-mode="edit"][data-sheet="min"] { --sheet-reserve: 56px; }
-#app[data-mode="view"] .sheet, #app[data-mode="view"] .handle, #app[data-mode="edit"] .fab { display: none; }
+#app[data-mode="view"] .sheet, #app[data-mode="view"] .handle { display: none; }
 
-.fab { position: fixed; right: var(--s-edge); bottom: calc(var(--s-dock) + 20px); height: 36px; padding: 0 14px; border-radius: var(--dl-radius-pill); background: color-mix(in srgb, var(--dl-color-surface-raised) 85%, transparent); box-shadow: inset 0 0 0 1px var(--dl-color-control-border), var(--dl-color-shadow-soft); font-size: var(--dl-type-footnote-size); font-weight: 600; color: var(--dl-color-accent); z-index: var(--dl-z-island); }
+.fabbar { position: fixed; right: var(--s-edge); bottom: calc(var(--s-dock) + 20px); display: flex; gap: 6px; z-index: var(--dl-z-island); }
+#app[data-mode="edit"] .fabbar { display: none; }
+.presetsw { flex: none; display: flex; padding: 2px; border-radius: var(--dl-radius-pill); background: color-mix(in srgb, var(--dl-color-surface-raised) 85%, transparent); box-shadow: inset 0 0 0 1px var(--dl-color-hairline); }
+.presetsw button { height: 40px; padding: 0 10px; border-radius: var(--dl-radius-pill); font-size: var(--dl-type-footnote-size); font-weight: 600; color: var(--dl-color-text-muted); }
+.presetsw button.on { background: var(--dl-color-accent-fill); color: var(--dl-color-on-accent); }
+.fab { height: 44px; padding: 0 14px; border-radius: var(--dl-radius-pill); background: color-mix(in srgb, var(--dl-color-surface-raised) 85%, transparent); box-shadow: inset 0 0 0 1px var(--dl-color-control-border), var(--dl-color-shadow-soft); font-size: var(--dl-type-footnote-size); font-weight: 600; color: var(--dl-color-accent); z-index: var(--dl-z-island); }
 
 .sheet { position: fixed; left: 0; right: 0; bottom: 0; height: 42dvh; display: flex; flex-direction: column; background: var(--dl-color-surface-chrome); backdrop-filter: blur(var(--dl-blur-chrome)); border-radius: var(--dl-radius-lg) var(--dl-radius-lg) 0 0; box-shadow: 0 -1px 0 var(--dl-color-hairline), var(--dl-color-shadow); z-index: var(--dl-z-sheet); font-size: var(--dl-type-footnote-size); transition: height var(--dl-dur-quick) var(--dl-ease-settle); }
 #app[data-sheet="min"] .sheet { height: 56px; overflow: hidden; }

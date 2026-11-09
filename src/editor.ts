@@ -1,6 +1,7 @@
 // Edit mode: a bottom sheet with a slider and −/+ per size, drag handles on the preview, Save / Copy / presets.
 import { h, toast } from './dom'
 import { DEFAULTS, GROUPS, SPECS, clamp, warningFor, type Group, type SizeKey, type Sizes } from './sizes'
+import { BUILT_INS, matchBuiltIn, type BuiltIn } from './presets'
 import { exportText, loadPreset, saveCurrent, savePreset, toHash, type Preset } from './store'
 
 type Mode = 'view' | 'edit'
@@ -19,13 +20,14 @@ export class Editor {
   private collapsed = false
   private readonly sheet = h('section', { class: 'sheet', 'aria-label': 'Sizes' })
   private readonly body = h('div', { class: 'sheet__body' })
-  private readonly fab = h('button', { class: 'fab', type: 'button' }, '✎ Edit sizes')
+  private readonly fab = h('button', { class: 'fab', type: 'button' }, '✎ Edit')
+  private readonly switches = [this.builtInSwitch(), this.builtInSwitch()]
   private readonly handles = HANDLES.map((d) => ({ ...d, el: h('div', { class: `handle handle--${d.axis}`, 'aria-hidden': 'true' }, h('b')) }))
 
   constructor(private readonly root: HTMLElement, private values: Sizes, private readonly onChange: (v: Sizes) => void) {
     this.fab.addEventListener('click', () => this.setMode('edit'))
     this.buildSheet()
-    root.append(this.fab, this.sheet, ...this.handles.map((d) => d.el))
+    root.append(h('div', { class: 'fabbar' }, this.switches[0], this.fab), this.sheet, ...this.handles.map((d) => d.el))
     this.handles.forEach((d) => this.wireHandle(d))
     new ResizeObserver(() => this.placeHandles()).observe(root)
     root.querySelector('.panel')!.addEventListener('scroll', () => this.placeHandles(), { passive: true })
@@ -63,13 +65,13 @@ export class Editor {
       btn('View', () => this.setMode('view')),
       btn('Save', () => this.save(), 'primary'),
       btn('Copy values', () => void this.copy(exportText(this.values))),
-      btn('Reset', () => { this.set({ ...DEFAULTS }); toast('Back to C1 defaults (not saved yet)') }))
+      btn('Reset', () => { this.set({ ...DEFAULTS }); toast('Back to your values, Mine (not saved yet)') }))
     const tabs = h('div', { class: 'sheet__tabs', role: 'tablist' }, ...GROUPS.map((g) => {
       const b = btn(g, () => { this.group = g; this.renderControls() }, 'tabbtn')
       b.dataset.group = g
       return b
     }))
-    const presets = h('div', { class: 'sheet__presets' }, ...(['A', 'B'] as const).flatMap((p) => [
+    const presets = h('div', { class: 'sheet__presets' }, this.switches[1], ...(['A', 'B'] as const).flatMap((p) => [
       btn(`Save as ${p}`, () => this.savePreset(p)),
       btn(`Load ${p}`, () => this.loadPreset(p)),
     ]), btn('Copy A+B', () => this.copyBoth()))
@@ -77,7 +79,20 @@ export class Editor {
     this.renderControls()
   }
 
+  /** One tap to flip between Mine, Suggested and C1 (not saved until Save). */
+  private builtInSwitch(): HTMLElement {
+    const group = h('div', { class: 'presetsw', role: 'group', 'aria-label': 'Built-in sizes' })
+    for (const name of Object.keys(BUILT_INS) as BuiltIn[]) {
+      const b = h('button', { type: 'button', 'data-preset': name }, name)
+      b.addEventListener('click', () => { this.set({ ...BUILT_INS[name] }); toast(`Showing ${name}`) })
+      group.append(b)
+    }
+    return group
+  }
+
   private renderControls(): void {
+    const match = matchBuiltIn(this.values)
+    for (const b of this.switches.flatMap((g) => [...g.querySelectorAll<HTMLElement>('[data-preset]')])) b.classList.toggle('on', b.dataset.preset === match)
     for (const b of this.sheet.querySelectorAll<HTMLElement>('.tabbtn')) b.classList.toggle('on', b.dataset.group === this.group)
     const rows = SPECS.filter((s) => s.group === this.group).map((s) => {
       const v = this.values[s.key]
